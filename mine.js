@@ -29,7 +29,12 @@ const run = async()=>{
 
     const doMine = async(minerInstance)=>{
         while (true) {
-            await minerInstance.mine();
+            try {
+                await minerInstance.mine();
+            } catch (e) {
+                console.error(e);
+                console.log('restarting the miner instance...');
+            }
             await new Promise((res)=>setTimeout(res, 100));
         };
     };
