@@ -136,14 +136,21 @@ export default class FomoMiner {
 
         let isOutdated = false;
         const __checkForOutdatedInterval = setInterval(()=>{
-            this.hasBlockInfoChanged(currentHash)
-                .then((changed)=>{
-                    console.log('FOMO | block hash changed', changed);
-                    if (changed) {
-                        isOutdated = true;
-                        this._nonceFinder.pleaseStop();
-                    }
-                });
+            try {
+                this.hasBlockInfoChanged(currentHash)
+                    .then((changed)=>{
+                        console.log('FOMO | block hash changed', changed);
+                        if (changed) {
+                            isOutdated = true;
+                            this._nonceFinder.pleaseStop();
+                        }
+                    })
+                    .catch((e)=>{
+                        console.error(e);
+                    });
+            } catch (e) {
+                console.log(e);
+            }
         }, 3000);
 
         while (!foundValid && !isOutdated) {

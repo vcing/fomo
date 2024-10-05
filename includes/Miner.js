@@ -91,14 +91,21 @@ export default class Miner {
 
         let isOutdated = false;
         const __checkForOutdatedInterval = setInterval(()=>{
-            this.hasBlockInfoChanged(blockInfo)
-                .then((changed)=>{
-                    console.log('META | block hash changed', changed);
-                    if (changed) {
-                        isOutdated = true;
-                        this._nonceFinder.pleaseStop();
-                    }
-                });
+            try {
+                this.hasBlockInfoChanged(blockInfo)
+                    .then((changed)=>{
+                        console.log('META | block hash changed', changed);
+                        if (changed) {
+                            isOutdated = true;
+                            this._nonceFinder.pleaseStop();
+                        }
+                    })
+                    .catch((e)=>{
+                        console.error(e);
+                    });
+            } catch (e) {
+                console.log(e);
+            }
         }, 3000);
 
         while (!foundValid && !isOutdated) {
