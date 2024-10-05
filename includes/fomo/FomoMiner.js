@@ -198,6 +198,9 @@ export default class FomoMiner {
 
             // 寻找有效的nonce
             nonce = await this.withLock(async ()=>{
+                // 重新获取矿工对象和准备哈希
+                miner = await this.getOrCreateMiner();
+                preparedHash = this.prepareHash(new Uint8Array(miner.fields.current_hash), signerAddressBytes);
                 return await this._nonceFinder.findValidNonce(preparedHash, difficultyAsTarget);
             });
 
@@ -211,7 +214,6 @@ export default class FomoMiner {
                     console.log('FOMO | blockInfo was wrong!!!');
                     nonce = nonce + 1;
 
-                    // 重新获取矿工对象和准备哈希
                     miner = await this.getOrCreateMiner();
                     preparedHash = this.prepareHash(new Uint8Array(miner.fields.current_hash), signerAddressBytes);
                 }
