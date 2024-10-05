@@ -1,5 +1,5 @@
 import { spawn, Thread, Worker } from "threads";
-
+import os from 'os';
 export default class NonceFinder {
     constructor(params = {}) {
         this._workers = [];
@@ -7,7 +7,8 @@ export default class NonceFinder {
         this._tryingNonces = [];
         this._initialNonce = 0;
         this._startedSearchAt = null;
-        this._workersCount = 8;
+        // 修改默认线程数为 cpu count
+        this._workersCount = os.cpus().length;
 
         this._askedToStop = false;
 
